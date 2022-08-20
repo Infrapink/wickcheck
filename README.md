@@ -84,6 +84,7 @@ ustJealous -n Quotes" will extract a list of pages linking to Quotes/YoureJustJe
 
   -u
   --url
+  
   Output a list of full URLs instead of just trope names (default behaviour). If -u and -t are both specified, the last one takes priority.
 
 USABILITY
