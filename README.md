@@ -19,16 +19,19 @@ Options passed to wickcheck.sh begin with a hyphen (-), as is standard on Unix a
   Note that if -n is specified, it will take priority over a namespace included in -w. Thus, for example,"./wickcheck.sh Quotes/YoureJustJealous -n Laconic" will perform a wick check on "Laconic/YoureJustJealous".
 
   -a
+  
   --all
   
   Do not extract a subset of wicks; write them all to output file.
 
   -d
+  
   --dot
   
   Replaced the final '/' in the output file with a '.'.
 
   -f
+  
   --fun
   
   Include wicks in the 'fun' namespaces; by default, they are excluded from the wick check. The canonical 'fun' namespaces are:
@@ -53,11 +56,13 @@ Options passed to wickcheck.sh begin with a hyphen (-), as is standard on Unix a
   Note that if -f and -i are both specified, -i takes priority and the check will only include those namespaces in the arguments to -i.
 
   -i NAMESPACE1[, NAMESPACE 2...]
+  
   --include NAMESPACE1[, NAMESPACE 2...]
   
   Restrict wicks to namespaces specified following -i. This option takes priority over -f and -x. Namespaces do not need to include trailing slashes; "Laconic/" and "Laconic" are both valid. Capitalisation does not matter; "Laconic", "lACONIC", "LACONIC", "laconic", and "lAcOnIc" are all equally valid.
     
   -n NAMESPACE
+  
   --namespace NAMESPACE
   
   Specify the namespace on which to perform the wick check (default is Main/). For example, "./wickcheck -w YoureJustJealous" will extract a list of pages linking to Main/YoureJustJealous, while "./wickcheck -w YoureJ\
@@ -66,11 +71,13 @@ ustJealous -n Quotes" will extract a list of pages linking to Quotes/YoureJustJe
   Note that -n will override any namespace specified in -w.
 
   -o OUTFILE
+  
   --output OUTFILE
   
   Write the final list of wicks to OUTFILE instead of the default.
 
   -x NAMESPACE1[, NAMESPACE 2...]
+  
   --exclude NAMESPACE1[, NAMESPACE 2...]
   
   Omit links from namespaces following -x.Namespaces do not need to include trailing slashes; "Laconic/" and "Laconic" are both valid. Capitalisation does not matter; "Laconic", "lACONIC", "LACONIC", "laconic", and "lAcOnIc" are all equally valid.
@@ -78,11 +85,13 @@ ustJealous -n Quotes" will extract a list of pages linking to Quotes/YoureJustJe
   Note that -i takes priority over -x; if both are specified, only -i will be taken into account.
 
   -t
+  
   --trope
   
   Output a list of tropes instead of a list of URLs. If -t and -u are both specified, the last one takes priority.
 
   -u
+  
   --url
   
   Output a list of full URLs instead of just trope names (default behaviour). If -u and -t are both specified, the last one takes priority.
