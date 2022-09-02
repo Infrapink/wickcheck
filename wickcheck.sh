@@ -11,6 +11,8 @@ trope=""
 fun=0
 included=()
 excluded=()
+redirects=()
+redirs=0
 outfile="checklist.txt"
 namespace="Main/"
 t=0
@@ -31,6 +33,7 @@ for j in ${flags[@]}; do
 	-w) trope=${flags[$h]} ;;
 	-f|--fun) fun=1 ;;
 	-n|--namespace) namespace=${flags[$h]} ;;
+	-r|--redirects) redirs=1 ;;
 	-i|--include)
 	    k=$h
             z=0
@@ -109,9 +112,39 @@ trope=$(echo $trope|sed 's_pmwiki.php/_relatedsearch.php?term=_')
 wget --quiet  --output-document=/tmp/wicklist $trope
 
 # next, we need to massage the HTML to extract a list of URLs
-sed 's_href_\n_g' /tmp/wicklist | egrep ^=  | cut -d '"' -f 2 > /tmp/wicklist2
+sed 's_href_\n_g' /tmp/wicklist > /tmp/wicklist2
+mv /tmp/wicklist2 /tmp/wicklist
+# check for redirects
+x=565
+y=0
+while [[ $(sed -n ${x}p /tmp/wicklist) =~ ^'="' ]]; do
+    a=$(sed -n ${x}p /tmp/wicklist)
+    b=$(echo $a|cut -d '"' -f 2)
+    c=$(echo $b|cut -d '=' -f 2)
+    redirects[$y]=$c
+    x=$((x+1))
+    y=$((y+1))
+done
+
+# now to download and process the redirect pages, if ordered.
+if [[ $redirs -eq 1 ]]; then
+    z=0
+    while [[ $z -lt ${#redirects[@]} ]]; do
+	link="https://tvtropes.org/pmwiki/pmwiki.php/${redirs[$z]}"
+	wget --quiet --output-document=/tmp/wicklist2 $link
+	sed -i 's_href_\n_g' /tmp/wicklist2
+	ankle=$(grep -n non-search /tmp/wicklist2|cut -f 1 -d ':')
+	tail -n +$((ankle + 1)) /tmp/wicklist2 >> /tmp/wicklist
+	z=$((z + 1))
+    done
+fi
+
+ankle=$(grep -n non-search /tmp/wicklist|cut -f 1 -d ':')
+tail -n +$((angle + 1)) /tmp/wicklist > /tmp/wicklist2
+mv /tmp/wicklist2 /tmp/wicklist
+egrep ^= /tmp/wicklist | cut -d '"' -f 2 > /tmp/wicklist2
 egrep ^/pmwiki/pmwiki.php /tmp/wicklist2 > /tmp/wicklist
-head -n -64 /tmp/wicklist |tail +9 > /tmp/wicklist2
+head -n -64 /tmp/wicklist > /tmp/wicklist2
 sed -i 's_^_https://tvtropes.org_g' /tmp/wicklist2
 mv /tmp/wicklist2 /tmp/wicklist
 
