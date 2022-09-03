@@ -134,20 +134,26 @@ if [[ $redirs -eq 1 ]]; then
 	wget --quiet --output-document=/tmp/wicklist2 $link
 	sed -i 's_href_\n_g' /tmp/wicklist2
 	ankle=$(grep -n non-search /tmp/wicklist2|cut -f 1 -d ':')
-	tail -n +$((ankle + 1)) /tmp/wicklist2 >> /tmp/wicklist
-	z=$((z + 1))
+	z=$((z + 1))	
+	tail -n +$((ankle + 1)) /tmp/wicklist2 >> /tmp/wicklist$z
     done
-    echo $(wc -l /tmp/wicklist)
 fi
 
 ankle=$(grep -n non-search /tmp/wicklist|cut -f 1 -d ':')
-tail -n +$((ankle + 1)) /tmp/wicklist > /tmp/wicklist2
-uniq /tmp/wicklist2 > /tmp/wicklist
-egrep ^= /tmp/wicklist | cut -d '"' -f 2 > /tmp/wicklist2
-egrep ^/pmwiki/pmwiki.php /tmp/wicklist2 > /tmp/wicklist
-head -n -64 /tmp/wicklist > /tmp/wicklist2
-sed -i 's_^_https://tvtropes.org_g' /tmp/wicklist2
-mv /tmp/wicklist2 /tmp/wicklist
+tail -n +$((ankle + 1)) /tmp/wicklist > /tmp/wicklist0
+#less /tmp/wicklist0
+rm /tmp/wicklist
+for i in /tmp/wicklist*; do
+    egrep ^= $i|cut -f 2 -d '"' > /tmp/temp
+    less /tmp/temp
+    egrep ^'/pmwiki/pmwiki.php' /tmp/temp > $i
+    echo $(wc -l $i)
+    echo $(wc -l /tmp/temp)
+    head -n -64 $i > /tmp/temp
+    sed 's_^_https://tvtropes.org_g' /tmp/temp > $i
+done
+
+cat /tmp/wicklist*|uniq > /tmp/wicklist
 
 # now we have a list of wicks to look at. time to figure out the target number.
 len=$(wc -l /tmp/wicklist|cut -f 1 -d ' ');
@@ -161,7 +167,7 @@ else
 fi
 
 # now to remove the omitted namespaces
-jff=("Headscratchers" "WMG" "AATAFOVS" "JustForFun" "DarthWiki" "SugarWiki" "SoYouWantTo" "Horrible" "Pantheon" "SelfDemonstrating" "Haiku" "ImageLinks" "Timeline" "UsefulNotes" "GrandUnifiedTimeline" "VideoExamples" "Sandbox")
+jff=("Headscratchers" "WMG" "AATAFOVS" "JustForFun" "DarthWiki" "SugarWiki" "SoYouWantTo" "Horrible" "Pantheon" "SelfDemonstrating" "Haiku" "ImageLinks" "Timeline" "UsefulNotes" "GrandUnifiedTimeline" "VideoExamples" "Sandbox" "Funny")
 if [[ ${#included[@]} -gt 0 ]]; then
     for n in ${included[@]}; do
 	m=$(echo $n|sed s_/__)
