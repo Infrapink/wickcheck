@@ -152,6 +152,7 @@ mv /tmp/wicklist2 /tmp/wicklist
 len=$(wc -l /tmp/wicklist|cut -f 1 -d ' ');
 dec=$(echo "scale=10;sqrt($len)"| bc);
 root=$(( `echo $dec|cut -f 1 -d '.'` + 1 ));
+
 if [[ $root -le 50 ]]; then
     target=50;
 else
@@ -195,7 +196,7 @@ elif [[ $len -le 50 ]]; then
     mv /tmp/wicklist $outfile;
 elif [[ $len -le $target ]]; then
     mv /tmp/eicklist $outfile
-elif [[ $target -lt 100 ]]; then
+elif [[ $len -lt 100 ]]; then
     # in this case, the number to include will be greater than the number to exclude
     # as such, it's easier and more efficient to get the number of wicks that will be omitted and remove them
     # than to get $target wicks
@@ -230,7 +231,6 @@ elif [[ $target -lt 100 ]]; then
 	fi
 	z=$((z+1))
     done
-
     for l in ${checklines[@]}; do
 	sed -i ${l}d /tmp/wicklist;
     done
