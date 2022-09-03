@@ -130,18 +130,19 @@ done
 if [[ $redirs -eq 1 ]]; then
     z=0
     while [[ $z -lt ${#redirects[@]} ]]; do
-	link="https://tvtropes.org/pmwiki/pmwiki.php/${redirs[$z]}"
+	link="https://tvtropes.org/pmwiki/pmwiki.php/${redirects[$z]}"
 	wget --quiet --output-document=/tmp/wicklist2 $link
 	sed -i 's_href_\n_g' /tmp/wicklist2
 	ankle=$(grep -n non-search /tmp/wicklist2|cut -f 1 -d ':')
 	tail -n +$((ankle + 1)) /tmp/wicklist2 >> /tmp/wicklist
 	z=$((z + 1))
     done
+    echo $(wc -l /tmp/wicklist)
 fi
 
 ankle=$(grep -n non-search /tmp/wicklist|cut -f 1 -d ':')
-tail -n +$((angle + 1)) /tmp/wicklist > /tmp/wicklist2
-mv /tmp/wicklist2 /tmp/wicklist
+tail -n +$((ankle + 1)) /tmp/wicklist > /tmp/wicklist2
+uniq /tmp/wicklist2 > /tmp/wicklist
 egrep ^= /tmp/wicklist | cut -d '"' -f 2 > /tmp/wicklist2
 egrep ^/pmwiki/pmwiki.php /tmp/wicklist2 > /tmp/wicklist
 head -n -64 /tmp/wicklist > /tmp/wicklist2
